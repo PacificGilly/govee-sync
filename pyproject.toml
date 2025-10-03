@@ -1,0 +1,15 @@
+[project]
+name = "govee-sync"
+version = "0.1.0"
+description = "Syncs all connected Govee Thermometers and saves to DB for visuals and analysis"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bleak>=1.1.1",
+    "django==5.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13.3",
+]
