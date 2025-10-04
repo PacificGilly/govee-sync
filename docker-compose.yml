@@ -1,0 +1,27 @@
+services:
+  govee:
+    build: .
+    container_name: govee_scanner
+    
+    # Meaning: The container shares the host machine’s network stack.
+    # Why: Bluetooth scanning via bleak/BlueZ uses DBus and sometimes raw Bluetooth sockets. Using host networking ensures the container can access the host’s Bluetooth adapter.
+    # Caveat: Works on Linux hosts. On WSL2, it may still require USB passthrough.
+    network_mode: host
+
+    # Meaning: Grants the container extended privileges (basically like root).
+    # Why: Necessary for direct hardware access (Bluetooth, DBus, etc.) because scanning often needs raw socket access.
+    privileged: true
+
+    volumes:
+      - /var/run/dbus:/var/run/dbus   # share host DBus socket
+      - .:/app                        # mount project for live dev
+    
+    # Meaning: Sets an environment variable inside the container.
+    environment:
+      
+
+      # PYTHONUNBUFFERED=1: Forces Python to flush stdout/stderr immediately.
+      # Why: Ensures logs from govee.py or uWSGI appear in real-time in your terminal, useful for debugging or dev-run.
+      - PYTHONUNBUFFERED=1
+      
+    command: uv run uwsgi --ini uwsgi.ini
