@@ -265,7 +265,6 @@ class GoveeThermometerHygrometer(BleakClient):
     def __init__(self, address) -> None:
         super().__init__(address, timeout=30.0)
 
-        self.name: str = None
         self.manufacturer: str = None
         self.model: str = None
         self.hardware: str = None
@@ -486,8 +485,7 @@ class GoveeThermometerHygrometer(BleakClient):
 
         name = await self.read_gatt_char_as_str(uuid=GoveeThermometerHygrometer.UUID_NAME)
         LOGGER.info(f"{self.address}: received device name: {name}")
-
-        self.name = name or self.name
+    
         self.manufacturer = name[0:2]
         self.model = name[2:7]
         return self.name
